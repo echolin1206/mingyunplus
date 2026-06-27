@@ -1,0 +1,20 @@
+name = "mingyunpluse-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# KV 命名空间 - 用于存储订单和会员信息
+# 部署后 wrangler 会生成 id，替换下面的占位符
+# [[kv_namespaces]]
+# binding = "KV"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+[vars]
+WECHAT_MCHID = "1627375792"
+WECHAT_APPID = ""           # 在 Cloudflare Dashboard 中设置你的公众号/小程序 appid
+NOTIFY_URL = ""             # 在 Cloudflare Dashboard 中设置 https://api.mingyunpluse.com/api/callback
+FRONTEND_URL = ""           # 在 Cloudflare Dashboard 中设置 https://mingyunpluse.com
+
+# 以下 Secrets 在 Cloudflare Dashboard → Workers → 你的 Worker → Settings → Variables 中设置
+# WECHAT_PRIVATE_KEY  = ""  # 商户API证书私钥（完整PEM格式）
+# WECHAT_SERIAL_NO    = ""  # 商户API证书序列号
+# WECHAT_APIV3_KEY    = ""  # API v3 密钥（32字节随机字符串）
