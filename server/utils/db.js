@@ -3,20 +3,19 @@ const path = require('path');
 const fs = require('fs');
 
 const isVercel = process.env.VERCEL === '1';
-const dbDir = isVercel ? '/tmp' : path.join(__dirname, '../../config');
-const dbPath = path.join(dbDir, 'mingyunplus.db');
+const dbPath = isVercel ? ':memory:' : path.join(__dirname, '../../config/mingyunplus.db');
 
-// 非 Vercel 环境确保目录存在
-if (!isVercel && !fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
+if (!isVercel) {
+    const dbDir = path.dirname(dbPath);
+    if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+    }
 }
 
 const db = new sqlite3.Database(dbPath);
 
-// 启用外键约束
 db.run('PRAGMA foreign_keys = ON');
 
-// 自动初始化表结构（Vercel 冷启动时数据库在 /tmp 会被重置）
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
