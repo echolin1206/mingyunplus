@@ -216,11 +216,44 @@ function getPageName(page) {
 async function loadDailyAlmanac() {
     try {
         const today = new Date().toISOString().slice(0, 10);
-        const data = { code: 0, data: window.MYAPI.getDailyAlmanac(today) };
-        renderDailyAlmanac(data.data);
+        let almanac;
+        if (window.MYAPI && window.MYAPI.getDailyAlmanac) {
+            almanac = window.MYAPI.getDailyAlmanac(today);
+        } else {
+            // api.js 未加载时的备用方案
+            almanac = generateDailyAlmanacFallback(today);
+        }
+        renderDailyAlmanac(almanac);
     } catch (err) {
         console.error('加载每日宜忌失败:', err);
     }
+}
+
+// api.js 未加载时的备用函数
+function generateDailyAlmanacFallback(date) {
+    const yiList = ['出行','祭祀','祈福','求嗣','解除','修造','动土','上梁','安床','入宅','移徙','嫁娶','纳采','会亲友','开市','交易','纳财'];
+    const jiList = ['嫁娶','移徙','入宅','安门','作灶','出火','进人口','纳畜','开市','立券','交易','出货财','栽种','伐木','安葬','破土'];
+    const colors = [{name:'星空紫', value:'#6B5B95'}, {name:'晨曦金', value:'#FFD700'}, {name:'翡翠绿', value:'#2E8B57'}, {name:'天空蓝', value:'#87CEEB'}, {name:'樱花粉', value:'#FFB7C5'}];
+    const blessings = [
+        '今日星辰相伴，好运自然来。保持微笑，美好的事物正在向你靠近。',
+        '晨起沐朝阳，暮归携星光。今日的你，自带光芒，所行皆坦途。',
+        '命里有时终须有，今日宜开怀大笑。放下忧虑，轻装前行。',
+        '天时地利人和，今日诸事顺遂。心怀善意，福运自至。',
+        '云开见月明，今日柳暗花明。坚持初心，好运已在路上。'
+    ];
+    const seed = parseInt(date.replace(/-/g, ''));
+    const rng = (s) => { let x = s; return () => { x = (x * 9301 + 49297) % 233280; return x / 233280; }; };
+    const r = rng(seed);
+    const shuf = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    return {
+        date,
+        yi: shuf(yiList).slice(0, 5 + Math.floor(r() * 4)).join('、'),
+        ji: shuf(jiList).slice(0, 3 + Math.floor(r() * 3)).join('、'),
+        luckyColor: colors[Math.floor(r() * colors.length)].name,
+        luckyColorValue: colors[Math.floor(r() * colors.length)].value,
+        blessing: blessings[Math.floor(r() * blessings.length)],
+        fortuneScore: 60 + Math.floor(r() * 41)
+    };
 }
 
 function renderDailyAlmanac(data) {
