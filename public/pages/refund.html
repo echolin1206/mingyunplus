@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>退款规则 - 命运+</title>
+    <meta name="description" content="命运+ 趣味心理娱乐测算平台退款规则">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .legal-page { padding: 100px 20px 40px; max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+        .legal-title { font-size: 2rem; color: var(--gold); text-align: center; margin-bottom: 8px; }
+        .legal-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 40px; font-size: 0.9rem; }
+        .legal-section { margin-bottom: 32px; }
+        .legal-section h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 12px; }
+        .legal-section p { color: var(--text-secondary); line-height: 2; margin-bottom: 8px; font-size: 0.95rem; }
+        .legal-highlight { color: var(--gold-light); font-weight: bold; }
+        .legal-back { display: inline-block; margin-top: 40px; padding: 10px 24px; border-radius: 20px; background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2); color: var(--gold); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+    <nav class="navbar">
+        <a href="/" class="nav-logo"><span class="logo-icon">✨</span><span>命运+</span></a>
+        <div class="nav-menu">
+            <a href="/" class="nav-item">首页</a>
+        </div>
+    </nav>
+    <div class="legal-page">
+        <h1 class="legal-title">退款规则</h1>
+        <p class="legal-subtitle">更新日期：2026 年</p>
+
+        <div class="legal-section">
+            <h3>一、服务性质</h3>
+            <p>本平台为<span class="legal-highlight">线上数字化娱乐工具权限</span>，解锁内容 / 开通会员即视为服务已交付；</p>
+            <p>主观觉得不好玩、解读不合预期，不支持无理由退款；</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>二、可退款情形</h3>
+            <p>仅以下情况可申请全额退款：</p>
+            <ol style="color:var(--text-secondary); line-height:2; padding-left:20px;">
+                <li>重复扣费；</li>
+                <li>支付成功后平台故障 24 小时以上无法使用全部功能。</li>
+            </ol>
+        </div>
+
+        <div class="legal-section">
+            <h3>三、不可退款情形</h3>
+            <ol style="color:var(--text-secondary); line-height:2; padding-left:20px;">
+                <li>用户已查看完整测算报告、使用会员功能；</li>
+                <li>用户主观不喜欢、认为解读不准确；</li>
+                <li>忘记账号、自行误填生辰信息；</li>
+                <li>政策、服务器不可抗力暂停服务。</li>
+            </ol>
+        </div>
+
+        <div class="legal-section">
+            <h3>四、退款流程</h3>
+            <p>退款需提供订单截图，3 个工作日内审核；</p>
+            <p>请联系客服提交退款申请。</p>
+        </div>
+
+        <div style="text-align:center">
+            <a href="/" class="legal-back">← 返回首页</a>
+        </div>
+    </div>
+
+    <footer class="footer" style="margin-top:40px">
+        <p>
+            <a href="/pages/disclaimer.html">【免责声明】</a>
+            <a href="/pages/terms.html">【用户服务协议】</a>
+            <a href="/pages/privacy.html">【隐私政策】</a>
+        </p>
+        <p style="margin-top:8px;font-size:0.75rem">本网站内容仅供趣味心理娱乐参考，不作为任何决策依据</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+        function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+        resize();
+        const stars = Array.from({length:80},()=>({x:Math.random()*w,y:Math.random()*h,s:Math.random()*2+0.5,o:Math.random(),d:Math.random()>0.5?1:-1}));
+        function draw(){ ctx.clearRect(0,0,w,h); stars.forEach(s=>{ ctx.beginPath(); ctx.arc(s.x,s.y,s.s,0,Math.PI*2); ctx.fillStyle=`rgba(255,215,0,${s.o})`; ctx.fill(); s.o+=s.d*0.01; if(s.o>1||s.o<0.2)s.d*=-1; s.y-=0.3; if(s.y<0){s.y=h;s.x=Math.random()*w;} }); requestAnimationFrame(draw); }
+        draw();
+        window.addEventListener('resize',resize);
+    </script>
+</body>
+</html>

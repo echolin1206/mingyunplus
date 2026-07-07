@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免责声明 - 命运+</title>
+    <meta name="description" content="命运+ 趣味心理娱乐测算平台免责声明">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .legal-page { padding: 100px 20px 40px; max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+        .legal-title { font-size: 2rem; color: var(--gold); text-align: center; margin-bottom: 8px; }
+        .legal-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 40px; font-size: 0.9rem; }
+        .legal-section { margin-bottom: 32px; }
+        .legal-section h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 12px; }
+        .legal-section p { color: var(--text-secondary); line-height: 2; margin-bottom: 8px; font-size: 0.95rem; }
+        .legal-section ol { color: var(--text-secondary); line-height: 2; padding-left: 20px; }
+        .legal-section li { margin-bottom: 8px; }
+        .legal-highlight { color: var(--gold-light); font-weight: bold; }
+        .legal-back { display: inline-block; margin-top: 40px; padding: 10px 24px; border-radius: 20px; background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2); color: var(--gold); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+    <nav class="navbar">
+        <a href="/" class="nav-logo"><span class="logo-icon">✨</span><span>命运+</span></a>
+        <div class="nav-menu">
+            <a href="/" class="nav-item">首页</a>
+        </div>
+    </nav>
+    <div class="legal-page">
+        <h1 class="legal-title">免责声明</h1>
+        <p class="legal-subtitle">更新日期：2026 年</p>
+
+        <div class="legal-section">
+            <p>本网站所有紫微、塔罗、五行、运势、每日宜忌、双人合盘等内容，<span class="legal-highlight">仅为传统民俗趣味心理娱乐工具</span>，不具备科学预测效力，仅供休闲解压、自我参考。</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>一、服务性质声明</h3>
+            <p>平台内容不构成医疗、法律、金融、职业、婚恋等重大决策建议，请勿仅凭本平台内容做出重要人生选择。</p>
+            <p>所有测算结果均为趣味心理娱乐参考，不存在"预测命运、算命、消灾、化解"等功能。</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>二、个人信息使用</h3>
+            <p>用户填写的生辰、出生时间等个人信息仅用于测算运算，平台承诺不私自对外泄露，支持用户随时联系客服删除个人测算数据。</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>三、付费服务说明</h3>
+            <p>用户自愿付费购买娱乐工具使用权限，一经开始提供服务，非平台故障原因不予退款，请谨慎下单。</p>
+            <p>本平台不提供改运、消灾、化解、辟邪等相关服务，所有解读均为正向性格、心态参考，无恐吓类话术。</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>四、不可抗力</h3>
+            <p>因网络故障、政策调整、服务器维护等不可抗力导致服务临时中断，平台会尽力维护，但不承担用户间接损失。</p>
+        </div>
+
+        <div class="legal-section">
+            <h3>五、用户同意</h3>
+            <p>您访问网站、点击支付即代表已完整阅读并同意以上全部条款。</p>
+        </div>
+
+        <div style="text-align:center">
+            <a href="/" class="legal-back">← 返回首页</a>
+        </div>
+    </div>
+
+    <footer class="footer" style="margin-top:40px">
+        <p>
+            <a href="/pages/disclaimer.html">【免责声明】</a>
+            <a href="/pages/terms.html">【用户服务协议】</a>
+            <a href="/pages/privacy.html">【隐私政策】</a>
+        </p>
+        <p style="margin-top:8px;font-size:0.75rem">本网站内容仅供趣味心理娱乐参考，不作为任何决策依据</p>
+    </footer>
+
+    <script>
+        // 星空背景（简化版）
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+        function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+        resize();
+        const stars = Array.from({length:80},()=>({x:Math.random()*w,y:Math.random()*h,s:Math.random()*2+0.5,o:Math.random(),d:Math.random()>0.5?1:-1}));
+        function draw(){ ctx.clearRect(0,0,w,h); stars.forEach(s=>{ ctx.beginPath(); ctx.arc(s.x,s.y,s.s,0,Math.PI*2); ctx.fillStyle=`rgba(255,215,0,${s.o})`; ctx.fill(); s.o+=s.d*0.01; if(s.o>1||s.o<0.2)s.d*=-1; s.y-=0.3; if(s.y<0){s.y=h;s.x=Math.random()*w;} }); requestAnimationFrame(draw); }
+        draw();
+        window.addEventListener('resize',resize);
+    </script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命运+ - 探索自我趣味测算｜紫微・塔罗・流年・每日宜忌</title>
+    <meta name="description" content="趣味心理娱乐测算平台，包含塔罗、紫微星盘、星座运势、每日宜忌等民俗休闲小游戏">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .banner-slogan { font-size: 2.2rem; text-align: center; background: linear-gradient(135deg, var(--gold), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; line-height: 1.4; }
+        .banner-tip { text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 32px; }
+        .intro-section { max-width: 700px; margin: 0 auto 40px; padding: 24px; }
+        .intro-section p { color: var(--text-secondary); line-height: 2; margin-bottom: 12px; font-size: 0.95rem; }
+        .intro-list { list-style: none; padding: 0; margin: 16px 0; }
+        .intro-list li { color: var(--text-secondary); padding: 6px 0; font-size: 0.95rem; }
+        .intro-list li::before { content: '✅ '; margin-right: 4px; }
+        .free-zone { max-width: 700px; margin: 0 auto 40px; padding: 24px; border: 1px solid rgba(255,215,0,0.2); border-radius: 16px; background: rgba(255,215,0,0.05); }
+        .free-zone-title { color: var(--gold); font-size: 1.1rem; margin-bottom: 8px; }
+        .free-zone p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8; }
+        .pricing-section { max-width: 800px; margin: 0 auto 40px; }
+        .pricing-title { text-align: center; color: var(--gold); font-size: 1.5rem; margin-bottom: 24px; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .pricing-card { padding: 28px; position: relative; }
+        .pricing-card.recommended { border: 2px solid var(--gold); background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(74,20,140,0.2)); }
+        .pricing-badge { position: absolute; top: -12px; right: 16px; padding: 4px 14px; border-radius: 12px; background: var(--gold); color: var(--bg-dark); font-size: 0.75rem; font-weight: bold; }
+        .pricing-name { font-size: 1.2rem; color: var(--gold); margin-bottom: 8px; }
+        .pricing-price { font-size: 2.5rem; font-weight: bold; color: var(--gold); }
+        .pricing-price small { font-size: 1rem; color: var(--text-secondary); }
+        .pricing-features { list-style: none; padding: 0; margin: 16px 0; }
+        .pricing-features li { color: var(--text-secondary); padding: 6px 0; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .pricing-features li::before { content: '✓ '; color: var(--gold); }
+        .pricing-warning { color: #FFA07A; font-size: 0.85rem; margin-top: 12px; }
+        .pricing-note { text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+        .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--gold); }
+        .share-watermark { text-align: center; color: var(--text-secondary); font-size: 0.75rem; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+
+    <nav class="navbar">
+        <a href="#" class="nav-logo" onclick="goPage('home')">
+            <span class="logo-icon">✨</span>
+            <span>命运+</span>
+        </a>
+        <div class="nav-menu">
+            <button class="nav-item" onclick="goPage('home')">首页</button>
+            <button class="nav-item" onclick="goPage('test')">趣味测试</button>
+            <button class="nav-item" onclick="goPage('tarot')">塔罗</button>
+            <button class="nav-item" onclick="goPage('zodiac')">星座</button>
+            <button class="nav-item" onclick="goPage('ziwei')">紫微</button>
+            <button class="nav-item" onclick="goPage('yearly')">流年</button>
+            <button class="nav-item" onclick="goPage('profile')">我的</button>
+        </div>
+        <button class="nav-vip" onclick="showPayModal('lifetime')">开通畅玩</button>
+    </nav>
+
+    <!-- 首页 -->
+    <section id="page-home" class="page active">
+        <div class="container">
+            <!-- Banner -->
+            <div class="hero-section" style="padding-top:40px">
+                <h1 class="banner-slogan">探索自我趣味测算｜紫微・塔罗・流年・每日宜忌</h1>
+                <p class="banner-tip">温馨提示：本平台所有内容仅作趣味心理娱乐参考，不作为人生重大决策依据</p>
+            </div>
+
+            <!-- 每日宜忌 -->
+            <div id="daily-almanac" class="daily-card glass-card">
+                <div class="daily-date">加载中...</div>
+                <div class="daily-score">--</div>
+                <div class="daily-score-label">今日趣味运势指数</div>
+                <div class="daily-yiji">
+                    <div class="yi-box">
+                        <span class="yi-label">✅ 宜</span>
+                        <span class="yi-content">加载中...</span>
+                    </div>
+                    <div class="ji-box">
+                        <span class="ji-label">❌ 忌</span>
+                        <span class="ji-content">加载中...</span>
+                    </div>
+                </div>
+                <div class="daily-lucky">
+                    <div class="lucky-item">
+                        <span class="lucky-color-dot" id="lucky-color-dot"></span>
+                        <span id="lucky-color-text">幸运色</span>
+                    </div>
+                </div>
+                <div class="daily-blessing" id="daily-blessing">加载中...</div>
+            </div>
+
+            <!-- 介绍正文 -->
+            <div class="intro-section glass-card">
+                <p style="color:var(--gold); font-size:1.1rem; margin-bottom:16px">想看看隐藏的自己？好奇近期状态、缘分契合度？</p>
+                <p>这里集合多款<span style="color:var(--gold)">轻量化趣味民俗测算小游戏</span>：</p>
+                <ul class="intro-list">
+                    <li>每日宜忌 + 幸运指南（每天都能回来玩）</li>
+                    <li>紫微星盘简易趣味解读</li>
+                    <li>八字五行性格小分析</li>
+                    <li>塔罗单问抽牌（感情 / 事业 / 选择困惑）</li>
+                    <li>年度流年趣味状态参考</li>
+                    <li>双人缘分合盘（情侣、闺蜜、合伙人）</li>
+                </ul>
+                <p>全部<span style="color:var(--gold)">大白话解读</span>，拒绝晦涩古文，测算结果可生成精美分享海报，适合截图发给好友一起休闲玩耍！</p>
+                <div class="share-watermark">趣味心理娱乐测算・仅供休闲参考</div>
+            </div>
+
+            <!-- 免费专区 -->
+            <div class="free-zone">
+                <div class="free-zone-title">👉 免费体验区</div>
+                <p>今日一张塔罗、生肖本周简运、简易人格测试</p>
+                <p style="font-size:0.8rem; margin-top:8px; color:rgba(255,255,255,0.5)">温馨提示：免费测算仅展示简短预览，完整深度解读需付费解锁</p>
+            </div>
+
+            <!-- 定价套餐 -->
+            <div class="pricing-section">
+                <div class="pricing-title">选择适合你的趣味娱乐方案</div>
+                <div class="pricing-grid">
+                    <div class="pricing-card glass-card">
+                        <div class="pricing-name">套餐 1｜单次深度测算</div>
+                        <div class="pricing-price">9.9 <small>元</small></div>
+                        <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:12px">适合只想单独测算一项</p>
+                        <ul class="pricing-features">
+                            <li>单次完整详细趣味解读报告</li>
+                            <li>保存本次测算记录</li>
+                            <li>生成一张分享海报</li>
+                        </ul>
+                        <div class="pricing-warning">⚠️ 仅限单一套测算，不含双人合盘、多次重复测算</div>
+                        <button class="submit-btn" style="margin-top:16px; width:100%" onclick="showPayModal('single')">选择单次测算</button>
+                    </div>
+                    <div class="pricing-card glass-card recommended">
+                        <div class="pricing-badge">推荐</div>
+                        <div class="pricing-name">套餐 2｜全站畅玩权益</div>
+                        <div class="pricing-price">39 <small>元</small></div>
+                        <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:12px">对比参考：4 次单次测算价格≈39 元，一次开通随便玩</p>
+                        <ul class="pricing-features">
+                            <li>全站所有测算无限次使用</li>
+                            <li>双人缘分合盘不限次数</li>
+                            <li>高清完整命盘导出</li>
+                            <li>无水印分享海报</li>
+                            <li>个人所有测算记录存档</li>
+                            <li>全站无广告打扰</li>
+                            <li>每年 1 次免费深度流年趣味测算</li>
+                        </ul>
+                        <button class="submit-btn" style="margin-top:16px; width:100%" onclick="showPayModal('lifetime')">开通全站畅玩</button>
+                    </div>
+                </div>
+                <div class="pricing-note">
+                    本权益为平台服务存续期间全站使用权，因不可抗力、政策合规调整等情况无法持续提供服务时，不做永久运营承诺。
+                </div>
+            </div>
+
+            <!-- 功能导航 -->
+            <div class="feature-grid">
+                <div class="feature-card glass-card" onclick="goPage('test')">
+                    <span class="feature-icon">🎯</span>
+                    <div class="feature-title">趣味人格测试</div>
+                    <div class="feature-desc">趣味性格测试，发现你的隐藏特质</div>
+                    <span class="feature-tag">免费体验</span>
+                </div>
+                <div class="feature-card glass-card" onclick="goPage('tarot')">
+                    <span class="feature-icon">🔮</span>
+                    <div class="feature-title">塔罗趣味抽牌</div>
+                    <div class="feature-desc">经典塔罗牌阵，趣味休闲指引</div>
+                    <span class="feature-tag">免费抽牌</span>
+                </div>
+                <div class="feature-card glass-card" onclick="goPage('zodiac')">
+                    <span class="feature-icon">♈</span>
+                    <div class="feature-title">星座趣味运势</div>
+                    <div class="feature-desc">12星座日周月年趣味状态参考</div>
+                    <span class="feature-tag">日运免费</span>
+                </div>
+                <div class="feature-card glass-card" onclick="goPage('ziwei')">
+                    <span class="feature-icon">⭐</span>
+                    <div class="feature-title">紫微趣味解读</div>
+                    <div class="feature-desc">生辰八字排盘，趣味命格参考</div>
+                    <span class="feature-tag">畅玩解锁</span>
+                </div>
+                <div class="feature-card glass-card" onclick="goPage('yearly')">
+                    <span class="feature-icon">🐉</span>
+                    <div class="feature-title">流年趣味参考</div>
+                    <div class="feature-desc">年度趣味状态分析，月度走势参考</div>
+                    <span class="feature-tag">畅玩解锁</span>
+                </div>
+                <div class="feature-card glass-card" onclick="goPage('daily')">
+                    <span class="feature-icon">📅</span>
+                    <div class="feature-title">每日宜忌趣味</div>
+                    <div class="feature-desc">今日宜忌、幸运色、趣味祈运语</div>
+                    <span class="feature-tag">每日免费</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 每日宜忌页面 -->
+    <section id="page-daily" class="page">
+        <div class="container">
+            <h2 class="page-title">📅 每日宜忌趣味</h2>
+            <p class="page-subtitle">查看今日趣味运势指引，休闲每一天</p>
+            <div id="daily-detail" class="daily-card glass-card"></div>
+        </div>
+    </section>
+
+    <!-- 趣味测试 -->
+    <section id="page-test" class="page">
+        <div class="container">
+            <h2 class="page-title">🎯 趣味人格测试</h2>
+            <p class="page-subtitle">回答几个问题，趣味探索你的性格类型</p>
+            <div id="test-start" class="test-container">
+                <div class="question-card glass-card">
+                    <div class="question-text">准备好了吗？让我们开始趣味探索你的性格密码...</div>
+                    <div class="answer-options">
+                        <button class="answer-btn" onclick="startTest()">✨ 开始趣味测试</button>
+                    </div>
+                </div>
+            </div>
+            <div id="test-questions" class="test-container" style="display:none">
+                <div class="test-progress" id="test-progress"></div>
+                <div class="question-card glass-card" id="question-card"></div>
+            </div>
+            <div id="test-result" class="test-container" style="display:none">
+                <div class="result-card glass-card" id="result-card"></div>
+                <div style="text-align:center;margin-top:24px">
+                    <button class="hero-cta" onclick="restartTest()">再测一次</button>
+                    <button class="hero-cta" onclick="shareResult()">分享结果</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 塔罗趣味抽牌 -->
+    <section id="page-tarot" class="page">
+        <div class="container">
+            <h2 class="page-title">🔮 塔罗趣味抽牌</h2>
+            <p class="page-subtitle">心中默念你的问题，趣味休闲抽一张牌</p>
+            <div class="tarot-section">
+                <div class="tarot-question">
+                    <input type="text" id="tarot-question" placeholder="请输入你想问的问题（如：我最近的事业状态如何？）">
+                </div>
+                <div class="spread-selector">
+                    <button class="spread-btn active" data-spread="single" onclick="selectSpread(this)">单张牌</button>
+                    <button class="spread-btn" data-spread="three" onclick="selectSpread(this)">三张牌阵</button>
+                    <button class="spread-btn" data-spread="celtic" onclick="selectSpread(this)">凯尔特十字</button>
+                </div>
+                <button class="hero-cta" onclick="drawTarot()">🎴 趣味抽牌</button>
+                <div class="tarot-cards" id="tarot-cards"></div>
+                <div class="tarot-summary" id="tarot-summary" style="display:none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 星座趣味运势 -->
+    <section id="page-zodiac" class="page">
+        <div class="container">
+            <h2 class="page-title">♈ 星座趣味运势</h2>
+            <p class="page-subtitle">选择你的星座，查看趣味状态参考</p>
+            <div id="zodiac-list" class="zodiac-grid"></div>
+            <div id="zodiac-detail" class="zodiac-detail" style="display:none">
+                <div class="zodiac-period-tabs">
+                    <button class="period-tab active" data-period="daily" onclick="selectPeriod(this)">今日</button>
+                    <button class="period-tab" data-period="weekly" onclick="selectPeriod(this)">本周</button>
+                    <button class="period-tab" data-period="monthly" onclick="selectPeriod(this)">本月</button>
+                    <button class="period-tab" data-period="yearly" onclick="selectPeriod(this)">本年</button>
+                </div>
+                <div id="zodiac-fortune-content"></div>
+                <div style="text-align:center;margin-top:24px">
+                    <button class="hero-cta" onclick="backToZodiacList()">返回星座列表</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 紫微趣味解读 -->
+    <section id="page-ziwei" class="page">
+        <div class="container">
+            <h2 class="page-title">⭐ 紫微趣味解读</h2>
+            <p class="page-subtitle">输入生辰信息，趣味解读你的星盘格局</p>
+            <div id="ziwei-form-container">
+                <div class="ziwei-form glass-card">
+                    <div class="form-group">
+                        <label class="form-label">出生年份</label>
+                        <input type="number" class="form-input" id="ziwei-year" value="1990" min="1900" max="2025">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">出生月份</label>
+                        <select class="form-select" id="ziwei-month"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">出生日期</label>
+                        <select class="form-select" id="ziwei-day"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">出生时辰</label>
+                        <select class="form-select" id="ziwei-hour"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">性别</label>
+                        <select class="form-select" id="ziwei-gender">
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                        </select>
+                    </div>
+                    <button class="submit-btn" onclick="submitZiwei()">生成趣味解读</button>
+                </div>
+            </div>
+            <div id="ziwei-result" class="ziwei-result" style="display:none"></div>
+        </div>
+    </section>
+
+    <!-- 流年趣味参考 -->
+    <section id="page-yearly" class="page">
+        <div class="container">
+            <h2 class="page-title">🐉 流年趣味参考</h2>
+            <p class="page-subtitle">查看你的年度趣味状态参考</p>
+            <div id="yearly-form-container">
+                <div class="ziwei-form glass-card">
+                    <div class="form-group">
+                        <label class="form-label">出生年份</label>
+                        <input type="number" class="form-input" id="yearly-birth-year" value="1990" min="1900" max="2025">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">生肖</label>
+                        <select class="form-select" id="yearly-zodiac">
+                            <option value="鼠">鼠</option>
+                            <option value="牛">牛</option>
+                            <option value="虎">虎</option>
+                            <option value="兔">兔</option>
+                            <option value="龙">龙</option>
+                            <option value="蛇">蛇</option>
+                            <option value="马">马</option>
+                            <option value="羊">羊</option>
+                            <option value="猴">猴</option>
+                            <option value="鸡">鸡</option>
+                            <option value="狗">狗</option>
+                            <option value="猪">猪</option>
+                        </select>
+                    </div>
+                    <button class="submit-btn" onclick="submitYearly()">查看趣味流年</button>
+                </div>
+            </div>
+            <div id="yearly-result" class="yearly-result" style="display:none"></div>
+        </div>
+    </section>
+
+    <!-- 用户中心 -->
+    <section id="page-profile" class="page">
+        <div class="container">
+            <h2 class="page-title">👤 我的</h2>
+            <p class="page-subtitle">查看趣味娱乐权益状态和测算记录</p>
+            <div class="profile-card glass-card">
+                <div class="profile-avatar">😊</div>
+                <div class="profile-name" id="profile-name">访客</div>
+                <div class="profile-vip not" id="profile-vip">普通用户</div>
+                <div style="margin-top:32px">
+                    <div class="pay-options">
+                        <div class="pay-option" onclick="showPayModal('single')">
+                            <span class="pay-name">单次深度测算</span>
+                            <span class="pay-price">¥9.9</span>
+                        </div>
+                        <div class="pay-option" onclick="showPayModal('lifetime')">
+                            <span class="pay-name">全站畅玩权益</span>
+                            <span>
+                                <span class="pay-original">¥99</span>
+                                <span class="pay-price">¥39</span>
+                            </span>
+                            <span class="pay-tag">超值</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 支付弹窗（新版） -->
+    <div id="pay-modal" class="modal-overlay" style="display:none">
+        <div class="modal-content" style="position:relative; max-width:520px;">
+            <button class="modal-close" onclick="closePayModal()">×</button>
+            <div class="modal-title">🔒 解锁完整趣味解读</div>
+            <div class="modal-desc">选择适合你的趣味娱乐方案</div>
+            
+            <div class="pay-options">
+                <div class="pay-option" id="pay-option-single" onclick="selectPayOption('single')">
+                    <span class="pay-name">单次深度测算</span>
+                    <span class="pay-price">¥9.9</span>
+                </div>
+                <div class="pay-option selected" id="pay-option-lifetime" onclick="selectPayOption('lifetime')">
+                    <span class="pay-name">全站畅玩权益</span>
+                    <span>
+                        <span class="pay-original">¥99</span>
+                        <span class="pay-price">¥39</span>
+                    </span>
+                    <span class="pay-tag">推荐</span>
+                </div>
+            </div>
+
+            <!-- 退款规则 -->
+            <div style="margin:16px 0; padding:12px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid var(--border-glass);">
+                <div style="color:var(--gold); font-size:0.85rem; margin-bottom:8px; font-weight:bold">📋 温馨退款说明</div>
+                <p style="color:var(--text-secondary); font-size:0.75rem; line-height:1.8; margin:0">
+                    本平台为线上数字化娱乐工具权限，解锁内容/开通会员即视为服务已交付；<br>
+                    主观觉得不好玩、解读不合预期，不支持无理由退款；<br>
+                    仅重复扣费、支付成功后平台故障 24 小时以上无法使用全部功能可申请全额退款；<br>
+                    退款需提供订单截图，3 个工作日内审核；政策、服务器不可抗力暂停服务不支持退款。
+                </p>
+            </div>
+
+            <!-- 勾选框 -->
+            <div style="margin:16px 0; display:flex; align-items:flex-start; gap:8px;">
+                <input type="checkbox" id="pay-agree-check" style="margin-top:4px; width:16px; height:16px; cursor:pointer;" onchange="onAgreeChange()">
+                <label for="pay-agree-check" style="color:var(--text-secondary); font-size:0.8rem; line-height:1.6; cursor:pointer;">
+                    我已阅读并同意
+                    <a href="/pages/disclaimer.html" target="_blank" style="color:var(--gold)">《免责声明》</a>
+                    <a href="/pages/refund.html" target="_blank" style="color:var(--gold)">《退款规则》</a>
+                    <a href="/pages/terms.html" target="_blank" style="color:var(--gold)">《用户服务协议》</a>
+                </label>
+            </div>
+
+            <div id="pay-error" style="display:none; color:#FF6B6B; text-align:center; font-size:0.85rem; margin:8px 0; padding:8px; background:rgba(255,107,107,0.1); border-radius:8px;"></div>
+            
+            <div id="pay-qrcode" style="display:none">
+                <div class="qr-code-box" id="qrcode-display">
+                    <div style="text-align:center">
+                        <div style="font-size:2.5rem">📱</div>
+                        <div style="margin-top:8px; font-size:0.85rem">支付宝扫码支付</div>
+                        <div id="pay-amount-display" style="margin-top:4px; font-size:1rem; font-weight:bold; color:#333"></div>
+                    </div>
+                </div>
+                <p id="pay-demo-tip" style="display:none; color:#FFD700; font-size:0.85rem; text-align:center; margin-top:8px">⚠️ 演示模式：未配置支付宝，点击"确认支付"即可解锁</p>
+            </div>
+
+            <div id="pay-actions" style="display:none; margin-top:16px">
+                <button class="submit-btn" id="pay-btn-confirm" style="margin-bottom:8px">✅ 确认支付</button>
+                <button class="submit-btn" style="background:transparent; color:var(--text-secondary); border:1px solid var(--border-glass)" onclick="closePayModal()">取消</button>
+            </div>
+            <button class="submit-btn" id="pay-btn-start" style="margin-top:24px" onclick="confirmPay()">立即支付</button>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/pages/disclaimer.html">【免责声明】</a>
+            <a href="/pages/terms.html">【用户服务协议】</a>
+            <a href="/pages/privacy.html">【隐私政策】</a>
+        </div>
+        <p>命运+ mingyunplus.com | 趣味心理娱乐测算・仅供休闲参考</p>
+        <p style="margin-top:8px;font-size:0.75rem">本网站所有内容仅为趣味心理娱乐工具，不具备科学预测效力，不作为任何决策依据</p>
+    </footer>
+
+    <script src="/js/api.js?v=2"></script>
+    <script src="/js/app.js?v=2"></script>
+</body>
+</html>
